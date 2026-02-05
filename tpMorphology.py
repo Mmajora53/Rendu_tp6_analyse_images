@@ -75,36 +75,41 @@ def erode(image, elem_struct) :
     :param elem_struct: élément structurant
     """
 
-    height, width = image.shape
-    elem_height, elem_width = elem_struct.shape
+    height, width = image.shape #dimensions de l'image
+    elem_height, elem_width = elem_struct.shape #dimensions de l'élément structurant
 
+    #servira au parcours de l'élément structurant
     centre_elemH = elem_height//2
     centre_elemW = elem_width//2
 
-    #res = np.zeros_like(image)
-    res = np.full_like(image, 255)
+    res = np.full_like(image, 255) #on prend l'image résultat en blanc
 
+    #pour chaque pixel de l'image d'entrée
     for y in range(height) :
         for x in range(width) :
-
-            #if image[y,x] == 0 :
-            #    res[y,x] = 0
             
-            all_white = True
+            all_white = True #doit vérifier que tous les pixels sous l'élém struct sont à 255
 
+            #pour chaque case de l'élément structurant
             for ey in range(-centre_elemH, centre_elemH+1) :
                 for ex in range(-centre_elemW, centre_elemW+1) :
 
+                    #on calcule les index correspondant dans elem_struct
                     iy = ey+centre_elemH
                     ix = ex+centre_elemW
 
+                    #si la case de coordonnée (iy, ix) vaut 1
                     if elem_struct[iy, ix] == 1 :
+
+                        #on calcule les coordonées correspondantes dans l'image
                         newY = y+ey
                         newX = x+ex
 
+                        #si le pixel (voisin ou pixel en question) est dans l'image et qu'il vaut 0
                         if 0<=newY<height and 0<=newX<width and image[newY,newX]==0 :
                             all_white = False
             
+            #le pixel scanné est mis à 0 si au moins l'un de ses voisins scanné est à 0
             if not all_white :
                 res[y,x] = 0
     
@@ -124,8 +129,9 @@ def close(image, elem_struct) :
     :param image: image d'entrée en niveaux de gris
     :param elem_struct: élément structurant
     """
-    dilated = dilation(image, elem_struct)
-    eroded = erode(dilated, elem_struct)
+
+    dilated = dilation(image, elem_struct) #dilatation de l'image
+    eroded = erode(dilated, elem_struct) #erosion de l'image dilatée
 
     return eroded
 
@@ -142,8 +148,9 @@ def open(image, elem_struct) :
     :param image: image d'entrée en niveaux de gris
     :param elem_struct: élément structurant
     """
-    eroded = erode(image, elem_struct)
-    dilated = dilation(eroded, elem_struct)
+
+    eroded = erode(image, elem_struct) #erosion de l'image
+    dilated = dilation(eroded, elem_struct) #dilatation de l'image erodée
 
     return dilated
 
@@ -162,10 +169,11 @@ def morphologicalGradient(image, elem_struct) :
     :param image: image d'entrée en niveaux de gris
     :param elem_struct: élément structurant
     """
-    dilated = dilation(image, elem_struct)
-    eroded = erode(image, elem_struct)
 
-    return dilated - eroded
+    dilated = dilation(image, elem_struct) #dilatation de l'image d'entrée
+    eroded = erode(image, elem_struct) #erosion de l'image d'entrée
+
+    return dilated - eroded #différence entre les deux images transformées
 
 
 
