@@ -1,8 +1,9 @@
 import cv2
 import numpy as np
+import os
 
 
-
+DOSSIER_SCRIPT = os.path.dirname(os.path.abspath(__file__))
 
 ################### Version pour les images binaires : 
 
@@ -174,7 +175,7 @@ def morphologicalGradient(image, elem_struct) :
 
 
 
-image1 = cv2.imread("/Users/MariaAydin1/Documents/M1_VMI_25_26/semestre2/AnalayseImages/tpHist_ressources/cas5.png", cv2.IMREAD_GRAYSCALE)
+image1 = cv2.imread(os.path.join(DOSSIER_SCRIPT,"cas5.png"), cv2.IMREAD_GRAYSCALE)
 
 
 #éléments struturants fournis par Grok
